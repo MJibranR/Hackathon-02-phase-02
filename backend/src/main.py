@@ -10,16 +10,14 @@ from src.db import create_db_and_tables
 
 app = FastAPI(title="Todo App API")
 
-# ✅ CORS Configuration
-origins = [
-    "http://localhost:3000",
-    "http://localhost:3001",
-    "https://hackathon-02-phase-02-frontend.vercel.app",
-]
-
+# ✅ SIMPLIFIED CORS - This WILL work
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:3001",
+        "https://hackathon-02-phase-02-frontend.vercel.app",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -37,7 +35,7 @@ def on_startup():
 # Register custom error handlers
 register_error_handlers(app)
 
-# Include routers AFTER CORS middleware
+# Include routers
 app.include_router(auth.router, prefix="/api")
 app.include_router(tasks.router, prefix="/api")
 
@@ -47,13 +45,16 @@ def read_root():
     logger.info("Root endpoint was called")
     return {"message": "Welcome to the Todo App API"}
 
-# ✅ DEBUG: Health check endpoint
+# Health check
 @app.get("/api/health")
 def health_check():
-    """Check if environment variables are set"""
     return {
         "status": "ok",
         "database_url_set": bool(os.getenv("DATABASE_URL")),
         "secret_set": bool(os.getenv("BETTER_AUTH_SECRET")),
-        "database_url_length": len(os.getenv("DATABASE_URL", "")),
+        "cors_origins": [
+            "http://localhost:3000",
+            "http://localhost:3001",
+            "https://hackathon-02-phase-02-frontend.vercel.app",
+        ]
     }
