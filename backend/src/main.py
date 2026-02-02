@@ -14,6 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 origins = [
     "http://localhost:3000",  # your React frontend
     "http://localhost:3001",  # your React frontend
+    "https://hackathon-02-phase-02-frontend.vercel.app/" # deployed frontend
 ]
 
 app.add_middleware(
