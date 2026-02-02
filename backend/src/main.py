@@ -1,6 +1,7 @@
 # src/main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import os
 
 from src.api import tasks, auth
 from src.error_handlers import register_error_handlers
@@ -9,8 +10,7 @@ from src.db import create_db_and_tables
 
 app = FastAPI(title="Todo App API")
 
-# ✅ CRITICAL FIX: CORS must be configured BEFORE any routes
-# Allow your frontend domain explicitly
+# ✅ CORS Configuration
 origins = [
     "http://localhost:3000",
     "http://localhost:3001",
@@ -46,3 +46,14 @@ app.include_router(tasks.router, prefix="/api")
 def read_root():
     logger.info("Root endpoint was called")
     return {"message": "Welcome to the Todo App API"}
+
+# ✅ DEBUG: Health check endpoint
+@app.get("/api/health")
+def health_check():
+    """Check if environment variables are set"""
+    return {
+        "status": "ok",
+        "database_url_set": bool(os.getenv("DATABASE_URL")),
+        "secret_set": bool(os.getenv("BETTER_AUTH_SECRET")),
+        "database_url_length": len(os.getenv("DATABASE_URL", "")),
+    }
