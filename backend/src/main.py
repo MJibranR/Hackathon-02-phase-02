@@ -9,19 +9,19 @@ from src.db import create_db_and_tables  # make sure this exists in db.py
 
 app = FastAPI(title="Todo App API")
 
-from fastapi.middleware.cors import CORSMiddleware
-
+# CORS configuration - FIXED
 origins = [
-    "http://localhost:3000",  # your React frontend
-    "https://hackathon-02-phase-02-frontend.vercel.app/", # deployed frontend
+    "http://localhost:3000",  # local development
+    "http://localhost:3001",  # alternative local port
+    "https://hackathon-02-phase-02-frontend.vercel.app",  # ✅ NO trailing slash!
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,   # must list frontend URL explicitly
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],     # GET, POST, PUT, DELETE
-    allow_headers=["*"],     # Authorization, Content-Type, etc
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
