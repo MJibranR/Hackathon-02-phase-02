@@ -12,8 +12,6 @@ app = FastAPI(title="Todo App API")
 # ✅ CORS MUST be added BEFORE including routers
 origins = [
     "http://localhost:3000",
-    "http://localhost:3001",
-    "https://hackathon-02-phase-02-frontend.vercel.app",
 ]
 
 app.add_middleware(
