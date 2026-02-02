@@ -9,19 +9,20 @@ from src.db import create_db_and_tables
 
 app = FastAPI(title="Todo App API")
 
-# ✅ CORS Configuration - MUST be before any routes
+# ✅ CORS MUST be added BEFORE including routers
 origins = [
     "http://localhost:3000",
     "http://localhost:3001",
-    "https://hackathon-02-phase-02-frontend.vercel.app",  # NO trailing slash
+    "https://hackathon-02-phase-02-frontend.vercel.app",
 ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],  # ✅ Explicitly include OPTIONS
     allow_headers=["*"],
+    expose_headers=["*"],  # ✅ Add this
 )
 
 # Run DB table creation on startup
@@ -36,7 +37,7 @@ def on_startup():
 # Register custom error handlers
 register_error_handlers(app)
 
-# Include API routers
+# ✅ Include routers AFTER CORS middleware
 app.include_router(auth.router, prefix="/api")
 app.include_router(tasks.router, prefix="/api")
 
