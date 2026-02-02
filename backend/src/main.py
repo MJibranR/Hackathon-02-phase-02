@@ -1,6 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
-import os
+from starlette.middleware.base import BaseHTTPMiddleware
 
 from src.api import tasks, auth
 from src.error_handlers import register_error_handlers
@@ -9,7 +9,19 @@ from src.db import create_db_and_tables
 
 app = FastAPI()
 
-# OPEN CORS - ALLOW EVERYTHING
+# Custom middleware to add CORS headers manually
+class CustomCORSMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        response = await call_next(request)
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Methods"] = "*"
+        response.headers["Access-Control-Allow-Headers"] = "*"
+        return response
+
+# Add custom CORS middleware
+app.add_middleware(CustomCORSMiddleware)
+
+# Also add standard CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -32,8 +44,8 @@ app.include_router(tasks.router, prefix="/api")
 
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to the Todo App API", "cors": "open"}
+    return {"message": "Welcome to the Todo App API", "cors": "MANUAL"}
 
 @app.get("/api/health")
 def health_check():
-    return {"status": "ok", "cors_enabled": True}
+    return {"status": "ok", "cors": "enabled"}

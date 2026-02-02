@@ -37,11 +37,7 @@ def create_user(*, user_data: dict, session: Session) -> User:
     Create a new user in the database.
     Truncates password for bcrypt and stores the hash.
     """
-    # Validate password length
-    if len(user_data.get("password", "")) > BCRYPT_MAX_LENGTH:
-        raise ValueError(f"Password cannot exceed {BCRYPT_MAX_LENGTH} characters.")
-
-    # Hash password
+    # Hash password (automatically truncates to 72 chars)
     hashed_password = get_password_hash(user_data["password"])
     user_data["password_hash"] = hashed_password
     user_data.pop("password", None)  # Remove plain password
