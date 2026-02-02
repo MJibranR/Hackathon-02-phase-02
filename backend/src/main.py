@@ -10,20 +10,27 @@ from src.db import create_db_and_tables
 
 app = FastAPI(title="Todo App API")
 
-# ✅ SIMPLIFIED CORS - This WILL work
+# ✅ ALLOW ALL VERCEL DOMAINS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origin_regex=r"https://.*\.vercel\.app",
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Also allow localhost
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
         "http://localhost:3001",
-        "https://hackathon-02-phase-02-frontend.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Run DB table creation on startup
 @app.on_event("startup")
 def on_startup():
     try:
@@ -32,29 +39,20 @@ def on_startup():
     except Exception as e:
         logger.error(f"Failed to create tables: {e}")
 
-# Register custom error handlers
 register_error_handlers(app)
 
-# Include routers
 app.include_router(auth.router, prefix="/api")
 app.include_router(tasks.router, prefix="/api")
 
-# Root endpoint
 @app.get("/")
 def read_root():
     logger.info("Root endpoint was called")
     return {"message": "Welcome to the Todo App API"}
 
-# Health check
 @app.get("/api/health")
 def health_check():
     return {
         "status": "ok",
         "database_url_set": bool(os.getenv("DATABASE_URL")),
         "secret_set": bool(os.getenv("BETTER_AUTH_SECRET")),
-        "cors_origins": [
-            "http://localhost:3000",
-            "http://localhost:3001",
-            "https://hackathon-02-phase-02-frontend.vercel.app",
-        ]
     }
