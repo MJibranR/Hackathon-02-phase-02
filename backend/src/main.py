@@ -1,35 +1,30 @@
-from fastapi import FastAPI, Request, Response
+# src/main.py
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from starlette.middleware.base import BaseHTTPMiddleware
 
 from src.api import tasks, auth
 from src.error_handlers import register_error_handlers
 from src.logger import logger
 from src.db import create_db_and_tables
 
-app = FastAPI()
+app = FastAPI(title="Todo App API")
 
-# Custom middleware to add CORS headers manually
-class CustomCORSMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next):
-        response = await call_next(request)
-        response.headers["Access-Control-Allow-Origin"] = "*"
-        response.headers["Access-Control-Allow-Methods"] = "*"
-        response.headers["Access-Control-Allow-Headers"] = "*"
-        return response
 
-# Add custom CORS middleware
-app.add_middleware(CustomCORSMiddleware)
+origins = [
+    "http://localhost:3000",
+    "https://hackathon-02-phase-02-frontend.vercel.app",
+]
 
-# Also add standard CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=False,
-    allow_methods=["*"],
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allow_headers=["*"],
+    expose_headers=["*"],  # ✅ Add this
 )
 
+# Run DB table creation on startup
 @app.on_event("startup")
 def on_startup():
     try:
@@ -38,14 +33,15 @@ def on_startup():
     except Exception as e:
         logger.error(f"Failed to create tables: {e}")
 
+# Register custom error handlers
 register_error_handlers(app)
+
+# ✅ Include routers AFTER CORS middleware
 app.include_router(auth.router, prefix="/api")
 app.include_router(tasks.router, prefix="/api")
 
+# Root endpoint
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to the Todo App API", "cors": "MANUAL"}
-
-@app.get("/api/health")
-def health_check():
-    return {"status": "ok", "cors": "enabled"}
+    logger.info("Root endpoint was called")
+    return {"message": "Welcome to the Todo App API"}
