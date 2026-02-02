@@ -9,9 +9,10 @@ from src.db import create_db_and_tables
 
 app = FastAPI(title="Todo App API")
 
-
+# ✅ CORS MUST be added BEFORE including routers
 origins = [
     "http://localhost:3000",
+    "http://localhost:3001",
     "https://hackathon-02-phase-02-frontend.vercel.app",
 ]
 
@@ -19,7 +20,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],  # ✅ Explicitly include OPTIONS
     allow_headers=["*"],
     expose_headers=["*"],  # ✅ Add this
 )
