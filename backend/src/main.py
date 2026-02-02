@@ -1,4 +1,3 @@
-# src/main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import os
@@ -8,15 +7,15 @@ from src.error_handlers import register_error_handlers
 from src.logger import logger
 from src.db import create_db_and_tables
 
-app = FastAPI(title="Todo App API")
+app = FastAPI()
 
-# ✅ ALLOW EVERYTHING - COMPLETELY PUBLIC
+# OPEN CORS - ALLOW EVERYTHING
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow ALL origins
-    allow_credentials=False,  # Disable credentials requirement
-    allow_methods=["*"],  # Allow all methods
-    allow_headers=["*"],  # Allow all headers
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 @app.on_event("startup")
@@ -28,19 +27,13 @@ def on_startup():
         logger.error(f"Failed to create tables: {e}")
 
 register_error_handlers(app)
-
 app.include_router(auth.router, prefix="/api")
 app.include_router(tasks.router, prefix="/api")
 
 @app.get("/")
 def read_root():
-    logger.info("Root endpoint was called")
-    return {"message": "Welcome to the Todo App API"}
+    return {"message": "Welcome to the Todo App API", "cors": "open"}
 
 @app.get("/api/health")
 def health_check():
-    return {
-        "status": "ok",
-        "database_url_set": bool(os.getenv("DATABASE_URL")),
-        "secret_set": bool(os.getenv("BETTER_AUTH_SECRET")),
-    }
+    return {"status": "ok", "cors_enabled": True}
