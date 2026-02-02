@@ -35,7 +35,6 @@ export interface TaskRead {
     updated_at: string;
 }
 
-
 // Custom Error Classes for specific handling
 export class AuthError extends Error {
     constructor(message = "Authentication required or session expired.") {
@@ -51,7 +50,8 @@ export class ForbiddenError extends Error {
     }
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api";
+// ✅ FIXED: Removed trailing slash from fallback URL
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://hackathon-02-phase-02-j7c4.vercel.app/api";
 
 async function apiRequest<T>(
     method: string,
@@ -67,9 +67,11 @@ async function apiRequest<T>(
         headers["Authorization"] = `Bearer ${token}`;
     }
 
+    // ✅ FIXED: Added credentials: 'include' for cookie-based auth
     const response = await fetch(`${API_BASE_URL}${path}`, {
         method,
         headers,
+        credentials: 'include', // Important for cookies/sessions
         body: data ? JSON.stringify(data) : undefined,
     });
 
@@ -103,6 +105,7 @@ export const signup = async (userData: UserCreate): Promise<UserRead> => {
     return apiRequest<UserRead>("POST", "/signup", userData);
 };
 
+// ✅ FIXED: Added credentials: 'include' for login
 export const login = async (loginData: UserLogin): Promise<Token> => {
     const formBody = new URLSearchParams();
     formBody.append("username", loginData.email);
@@ -113,6 +116,7 @@ export const login = async (loginData: UserLogin): Promise<Token> => {
         headers: {
             "Content-Type": "application/x-www-form-urlencoded",
         },
+        credentials: 'include', // ✅ Important for cookies
         body: formBody.toString(),
     });
 
