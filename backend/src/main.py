@@ -5,15 +5,15 @@ from fastapi.middleware.cors import CORSMiddleware
 from src.api import tasks, auth
 from src.error_handlers import register_error_handlers
 from src.logger import logger
-from src.db import create_db_and_tables  # make sure this exists in db.py
+from src.db import create_db_and_tables
 
 app = FastAPI(title="Todo App API")
 
-# CORS configuration - FIXED
+# ✅ CORS Configuration - MUST be before any routes
 origins = [
-    "http://localhost:3000",  # local development
-    "http://localhost:3001",  # alternative local port
-    "https://hackathon-02-phase-02-frontend.vercel.app",  # ✅ NO trailing slash!
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "https://hackathon-02-phase-02-frontend.vercel.app",  # NO trailing slash
 ]
 
 app.add_middleware(
@@ -23,7 +23,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 # Run DB table creation on startup
 @app.on_event("startup")
