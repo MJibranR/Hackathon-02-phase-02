@@ -1,0 +1,26 @@
+# Git Ignore File
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+dist/
+*.egg-info/
+.env
+
+# Node.js / TypeScript / Next.js
+node_modules/
+dist/
+build/
+*.log
+.next/
+out/
+
+# Universal
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
+.vscode/
+.idea/

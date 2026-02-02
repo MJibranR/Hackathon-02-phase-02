@@ -1,91 +1,50 @@
-<!--
-<SyncImpactReport>
-<VersionChange>0.0.0 (initial) -> 1.0.0</VersionChange>
-<ModifiedPrinciples>
-    - All principles were effectively replaced by the new comprehensive constitution.
-</ModifiedPrinciples>
-<AddedSections>
-    - PROJECT OVERVIEW
-    - CORE PRINCIPLES
-    - TECHNOLOGY STACK
-    - ARCHITECTURE RULES
-    - API DESIGN
-    - DATABASE SCHEMA
-    - CODE QUALITY STANDARDS
-    - SECURITY REQUIREMENTS
-    - DEPLOYMENT REQUIREMENTS
-    - DEVELOPMENT WORKFLOW
-    - CONSTRAINTS
-    - SUCCESS CRITERIA
-</AddedSections>
-<RemovedSections>
-    - (None - this is a full replacement)
-</RemovedSections>
-<TemplatesRequiringUpdates>
-    - .specify/templates/plan-template.md: ✅ aligned (no specific updates needed for this constitution change)
-    - .specify/templates/spec-template.md: ✅ aligned (no specific updates needed for this constitution change)
-    - .specify/templates/tasks-template.md: ✅ aligned (no specific updates needed for this constitution change)
-    - .specify/commands/sp.adr.toml: ✅ aligned (no specific updates needed for this constitution change)
-    - .specify/commands/sp.analyze.toml: ✅ aligned (no specific updates needed for this constitution change)
-    - .specify/commands/sp.checklist.toml: ✅ aligned (no specific updates needed for this constitution change)
-    - .specify/commands/sp.clarify.toml: ✅ aligned (no specific updates needed for this constitution change)
-    - .specify/commands/sp.constitution.toml: ✅ aligned (no specific updates needed for this constitution change)
-    - .specify/commands/sp.git.commit_pr.toml: ✅ aligned (no specific updates needed for this constitution change)
-    - .specify/commands/sp.implement.toml: ✅ aligned (no specific updates needed for this constitution change)
-    - .specify/commands/sp.phr.toml: ✅ aligned (no specific updates needed for this constitution change)
-    - .specify/commands/sp.plan.toml: ✅ aligned (no specific updates needed for this constitution change)
-    - .specify/commands/sp.reverse-engineer.toml: ✅ aligned (no specific updates needed for this constitution change)
-    - .specify/commands/sp.specify.toml: ✅ aligned (no specific updates needed for this constitution change)
-    - .specify/commands/sp.tasks.toml: ✅ aligned (no specific updates needed for this constitution change)
-    - .specify/commands/sp.taskstoissues.toml: ✅ aligned (no specific updates needed for this constitution change)
-    - README.md: ⚠ pending (Review and update based on new constitution details)
-    - CLAUDE.md: ⚠ pending (Review and update based on new constitution details)
-</TemplatesRequiringUpdates>
-<FollowUpTODOs>
-    - PROJECT_LEAD: Identify and add the project lead to the governance section if desired.
-    - CODE_REPOSITORY: Add the project's code repository URL to the governance section.
-    - ISSUE_TRACKING_SYSTEM: Add the issue tracking system details to the governance section.
-    - CHANGE_CONTROL_PROCESS: Detail a more explicit change control process in governance.
-    - COMPLIANCE_REVIEW_INTERVAL: Define the interval for compliance reviews.
-</FollowUpTODOs>
-</SyncImpactReport>
-# PHASE II CONSTITUTION - FULL-STACK TODO WEB APPLICATION Constitution
+---
+id: "0002"
+title: "Phase II Constitution - Full-Stack Todo Web Application"
+stage: "constitution"
+date: "2026-01-25"
+surface: "agent"
+model: "gemini-1.5-flash-latest"
+feature: "none"
+branch: "main"
+user: "user"
+command: "/sp.constitution PHASE II CONSTITUTION - FULL-STACK TODO WEB APPLICATION
 
-## PROJECT OVERVIEW
+PROJECT OVERVIEW
 Build a multi-user todo web application with Next.js frontend, FastAPI backend, and Neon PostgreSQL database using spec-driven development with AI agents.
 
-## CORE PRINCIPLES
+CORE PRINCIPLES
 
-### I. Spec-Driven Development
+1. Spec-Driven Development
 - No code without specification
 - Human writes specs, AI generates code
 - Iteration through spec refinement
 - Every feature traceable to spec
 
-### II. Security First
+2. Security First
 - JWT authentication mandatory
 - User data completely isolated
 - No user can access another's data
 - Passwords hashed, tokens expire
 
-### III. Clean Code
+3. Clean Code
 - TypeScript strict mode
 - Python type hints required
 - Descriptive names
 - Proper error handling
 
-### IV. AI-Generated Code
+4. AI-Generated Code
 - All code via Gemini CLI or Claude Code
 - Zero manual coding
 - Spec-Kit Plus workflow
 
-### V. User Experience
+5. User Experience
 - Responsive design
 - Clear error messages
 - Loading indicators
 - Accessible UI
 
-## TECHNOLOGY STACK
+TECHNOLOGY STACK
 
 Frontend:
 - Next.js 16+ (App Router)
@@ -107,7 +66,7 @@ Database:
 - Indexes on user_id, completed
 - Foreign key constraints
 
-## ARCHITECTURE RULES
+ARCHITECTURE RULES
 
 Project Structure:
 ```
@@ -152,7 +111,7 @@ Security Flow:
 6. Validate user_id matches URL
 7. Filter all queries by user_id
 
-## API DESIGN
+API DESIGN
 
 Endpoints:
 - GET /api/{user_id}/tasks
@@ -177,7 +136,7 @@ Response Format:
 - 403: Forbidden
 - 404: Not found
 
-## DATABASE SCHEMA
+DATABASE SCHEMA
 
 users table (Better Auth):
 - id: string PRIMARY KEY
@@ -200,7 +159,7 @@ Indexes:
 - CREATE INDEX idx_tasks_user_id ON tasks(user_id)
 - CREATE INDEX idx_tasks_completed ON tasks(completed)
 
-## CODE QUALITY STANDARDS
+CODE QUALITY STANDARDS
 
 TypeScript Rules:
 - Explicit types on functions
@@ -222,7 +181,7 @@ Error Handling:
 - Log errors server-side
 - Never expose stack traces
 
-## SECURITY REQUIREMENTS
+SECURITY REQUIREMENTS
 
 Authentication:
 - JWT tokens expire in 7 days
@@ -243,7 +202,7 @@ Data Protection:
 - HTTPS in production
 - Environment variables for secrets
 
-## DEPLOYMENT REQUIREMENTS
+DEPLOYMENT REQUIREMENTS
 
 Frontend (Vercel):
 - Deploy from /frontend
@@ -263,7 +222,7 @@ Database (Neon):
 - Connection pooling
 - DATABASE_URL env variable
 
-## DEVELOPMENT WORKFLOW
+DEVELOPMENT WORKFLOW
 
 1. Write specification
 2. Generate plan
@@ -274,7 +233,7 @@ Database (Neon):
 7. Commit to GitHub
 8. Deploy to production
 
-## CONSTRAINTS
+CONSTRAINTS
 
 Development:
 - No manual coding
@@ -294,7 +253,7 @@ Timeline:
 - Demo video: 90 seconds max
 - Public GitHub repo required
 
-## SUCCESS CRITERIA
+SUCCESS CRITERIA
 
 Functional:
 - All 5 CRUD operations work
@@ -316,10 +275,27 @@ Submission:
 - Deployed backend URL
 - 90-second demo video
 
-## Governance
-This constitution sets forth the core principles and guidelines for the development of the PHASE II CONSTITUTION - FULL-STACK TODO WEB APPLICATION project.
-Amendments to this constitution must be proposed, documented, and approved by the project lead.
-All changes to the constitution will follow semantic versioning rules: MAJOR for backward-incompatible changes, MINOR for new sections or principles, and PATCH for clarifications or fixes.
-Compliance with this constitution will be regularly reviewed and enforced throughout the development lifecycle.
+---
 
-**Version**: 1.0.0 | **Ratified**: 2026-01-25 | **Last Amended**: 2026-01-25
+## Prompt
+
+{{PROMPT_TEXT}}
+
+## Response snapshot
+
+{{RESPONSE_TEXT}}
+
+## Outcome
+
+- ✅ Impact: {{OUTCOME_IMPACT}}
+- 🧪 Tests: {{TESTS_SUMMARY}}
+- 📁 Files: {{FILES_SUMMARY}}
+- 🔁 Next prompts: {{NEXT_PROMPTS}}
+- 🧠 Reflection: {{REFLECTION_NOTE}}
+
+## Evaluation notes (flywheel)
+
+- Failure modes observed: {{FAILURE_MODES}}
+- Graders run and results (PASS/FAIL): {{GRADER_RESULTS}}
+- Prompt variant (if applicable): {{PROMPT_VARIANT_ID}}
+- Next experiment (smallest change to try): {{NEXT_EXPERIMENT}}

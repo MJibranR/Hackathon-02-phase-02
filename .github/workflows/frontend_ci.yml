@@ -1,0 +1,41 @@
+name: Frontend CI
+
+on:
+  push:
+    branches:
+      - master
+      - main
+    paths:
+      - 'frontend/**'
+  pull_request:
+    branches:
+      - master
+      - main
+    paths:
+      - 'frontend/**'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Install dependencies
+      run: |
+        cd frontend
+        npm install
+
+    - name: Run ESLint
+      run: |
+        cd frontend
+        npm run lint
+
+    - name: Run tests
+      run: |
+        cd frontend
+        npm test

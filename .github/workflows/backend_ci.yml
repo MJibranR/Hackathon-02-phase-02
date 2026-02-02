@@ -1,0 +1,40 @@
+name: Backend CI
+
+on:
+  push:
+    branches:
+      - master
+      - main
+    paths:
+      - 'backend/**'
+  pull_request:
+    branches:
+      - master
+      - main
+    paths:
+      - 'backend/**'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        cd backend
+        python -m venv .venv
+        source .venv/bin/activate
+        pip install -r requirements.txt
+        pip install pytest python-dotenv sqlmodel # Ensure test dependencies are there
+
+    - name: Run tests
+      run: |
+        cd backend
+        source .venv/bin/activate
+        pytest tests/

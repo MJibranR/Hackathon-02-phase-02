@@ -1,0 +1,282 @@
+openapi: 3.0.0
+info:
+  title: Multi-User Todo Web Application API
+  description: API for managing tasks for multiple users, with authentication and data isolation.
+  version: 1.0.0
+servers:
+  - url: /api/{user_id}
+    variables:
+      user_id:
+        default: 'me'
+        description: The ID of the authenticated user. This is extracted from the JWT.
+paths:
+  /tasks:
+    get:
+      summary: Retrieve a list of tasks for the authenticated user
+      operationId: getTasks
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: A list of tasks.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+    post:
+      summary: Create a new task for the authenticated user
+      operationId: createTask
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskCreate'
+      responses:
+        '201':
+          description: Task created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /tasks/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID of the task to retrieve or manipulate.
+        schema:
+          type: integer
+    get:
+      summary: Retrieve a specific task for the authenticated user
+      operationId: getTaskById
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: A single task.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      summary: Update a specific task for the authenticated user
+      operationId: updateTask
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskUpdate'
+      responses:
+        '200':
+          description: Task updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      summary: Delete a specific task for the authenticated user
+      operationId: deleteTask
+      security:
+        - bearerAuth: []
+      responses:
+        '204':
+          description: Task deleted successfully.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /tasks/{id}/complete:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID of the task to mark as complete/incomplete.
+        schema:
+          type: integer
+    patch:
+      summary: Mark a task as complete or incomplete for the authenticated user
+      operationId: markTaskCompleteIncomplete
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                completed:
+                  type: boolean
+                  description: New completion status for the task.
+              required:
+                - completed
+      responses:
+        '200':
+          description: Task status updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User: # For reference, handled by Better Auth
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+      required:
+        - id
+        - email
+    Task:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user_id:
+          type: string
+          readOnly: true
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        description:
+          type: string
+          nullable: true
+          maxLength: 1000
+        completed:
+          type: boolean
+          default: false
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - id
+        - user_id
+        - title
+        - completed
+    TaskCreate:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        description:
+          type: string
+          nullable: true
+          maxLength: 1000
+      required:
+        - title
+    TaskUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        description:
+          type: string
+          nullable: true
+          maxLength: 1000
+      minProperties: 1 # At least one property must be present for an update
+  responses:
+    Unauthorized:
+      description: Unauthorized - Authentication token is missing or invalid.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              detail:
+                type: string
+                example: "Unauthorized"
+    Forbidden:
+      description: Forbidden - User does not have permission to access this resource.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              detail:
+                type: string
+                example: "Forbidden"
+    NotFound:
+      description: Not Found - The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              detail:
+                type: string
+                example: "Task not found"
+    BadRequest:
+      description: Bad Request - Invalid input data.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              detail:
+                type: string
+                example: "Validation error"
