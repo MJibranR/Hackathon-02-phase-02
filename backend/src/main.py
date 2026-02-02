@@ -10,25 +10,13 @@ from src.db import create_db_and_tables
 
 app = FastAPI(title="Todo App API")
 
-# ✅ ALLOW ALL VERCEL DOMAINS
+# ✅ ALLOW EVERYTHING - COMPLETELY PUBLIC
 app.add_middleware(
     CORSMiddleware,
-    allow_origin_regex=r"https://.*\.vercel\.app",
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# Also allow localhost
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://localhost:3001",
-    ],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=["*"],  # Allow ALL origins
+    allow_credentials=False,  # Disable credentials requirement
+    allow_methods=["*"],  # Allow all methods
+    allow_headers=["*"],  # Allow all headers
 )
 
 @app.on_event("startup")
