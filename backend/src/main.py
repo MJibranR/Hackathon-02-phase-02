@@ -9,15 +9,20 @@ from src.db import create_db_and_tables
 
 app = FastAPI(title="Todo App API")
 
-# ✅ UPDATED: Allow all origins to fix CORS issues
-# Note: For production, you should restrict this to specific domains
+# ✅ CRITICAL FIX: CORS must be configured BEFORE any routes
+# Allow your frontend domain explicitly
+origins = [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "https://hackathon-02-phase-02-frontend.vercel.app",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins (you can restrict later)
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allow_methods=["*"],
     allow_headers=["*"],
-    expose_headers=["*"],
 )
 
 # Run DB table creation on startup
